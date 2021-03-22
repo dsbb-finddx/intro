@@ -1,5 +1,5 @@
 # intro-git
 
-This is oue presentation page..
+This is our presentation page..
 
 Change...
