@@ -1,20 +1,60 @@
 ---
-title: "Single Column (Fill)"
+title: "ggplotly geoms"
+author: "Anna Mantsoki"
 output: 
   flexdashboard::flex_dashboard:
-    vertical_layout: fill
+    orientation: rows
+    social: menu
+    source_code: embed
 ---
 
-### Chart 1
-    
-```{r}
+```{r setup, include=FALSE}
+library(ggplot2)
+library(plotly)
+library(plyr)
+library(flexdashboard)
+library(ggplotlyExtra)
 
+# Make some noisily increasing data
+set.seed(955)
+dat <- data.frame(cond = rep(c("A", "B"), each=10),
+                  xvar = 1:20 + rnorm(20,sd=3),
+                  yvar = 1:20 + rnorm(20,sd=3))
 ```
-    
-### Chart 2
+
+geom_point
+=======================================================================
+
+Row
+-----------------------------------------------------------------------
+
+### Scatter Chart with geom_point
 
 ```{r}
-
+p <- ggplot(dat, aes(x=xvar, y=yvar)) +
+            geom_point(shape=1)      # Use hollow circles
+ggplotly(p)
 ```
 
+
+### geom_smooth Linear Regression
+
+```{r}
+p <- ggplot(dat, aes(x=xvar, y=yvar)) +
+            geom_point(shape=1) +    # Use hollow circles
+            geom_smooth(method=lm)   # Add linear regression line
+ggplotly(p)
+```
+
+Row
+-----------------------------------------------------------------------
+
+### geom_smooth with Loess Smoothed Fit
+
+```{r}
+p <- ggplot(dat, aes(x=xvar, y=yvar)) +
+            geom_point(shape=1) +    # Use hollow circles
+            geom_smooth()            # Add a loess smoothed fit curve with confidence region
+ggplotly(p)
+```
 
