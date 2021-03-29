@@ -29,8 +29,20 @@ jobs:
         uses: r-lib/actions/setup-r@v1
         with:
          r-version: '4.0.4' # The R version to load (if necessary) and use.
-         
+      
+      
+      - run: |
+          Rscript -e "install.packages('dplyr', repos = 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest')"
+          Rscript -e "install.packages('readr', repos = 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest')"
          
       # Run Script
-      - run: Rscript -e 'print("Hello World")'
-       
+      - run: Rscript -e load_test.R
+      
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull origin main
+          git add tests_today.csv
+          git commit -m "update tests_today.csv" || echo "Nothing to update"
+
