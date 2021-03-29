@@ -10,6 +10,6 @@ tests_data_today <- tests_data %>%
 
   filter(date == today) %>%
 
-  select(tests_cumulative, pcr_tests_cum, rapid_test_cum)
+  select(country, tests_cumulative, pcr_tests_cum, rapid_test_cum)
 
 readr::write_csv(tests_data_today, "data/tests_today.csv")
