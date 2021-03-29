@@ -36,7 +36,7 @@ jobs:
           Rscript -e "install.packages('readr', repos = 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest')"
          
       # Run Script
-      - run: Rscript -e load_test.R
+      - run: Rscript load_test.R
       
       - name: Commit files
         run: |
