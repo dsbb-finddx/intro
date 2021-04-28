@@ -1,60 +1,51 @@
 ---
-title: "ggplotly geoms"
-author: "Anna Mantsoki"
-output: 
-  flexdashboard::flex_dashboard:
-    orientation: rows
-    social: menu
-    source_code: embed
+title: "Test data"
+output: flexdashboard::flex_dashboard
 ---
 
 ```{r setup, include=FALSE}
+# library(dygraphs)
+# library(xts)
+# library(tsbox)
+library(dplyr)
+# library(readr)
+# library(htmlwidgets)
+library(readr)
 library(ggplot2)
-library(plotly)
-library(plyr)
-library(flexdashboard)
-library(ggplotlyExtra)
 
-# Make some noisily increasing data
-set.seed(955)
-dat <- data.frame(cond = rep(c("A", "B"), each=10),
-                  xvar = 1:20 + rnorm(20,sd=3),
-                  yvar = 1:20 + rnorm(20,sd=3))
+tests_data <- readr::read_csv(
+    "https://raw.githubusercontent.com/dsbbfinddx/FINDCov19TrackerData/master/automated/segregated_tests.csv")
+
+today <- format(Sys.time(), "%Y-%m-%d")
+
+tests_data_today <- tests_data %>%
+    filter(date == today)
 ```
+    
+Column {data-width=600}
+-------------------------------------
+    
+### Tests Cumulative
+    
+```{r plot1, echo=FALSE}
+ggplot(tests_data_today) + 
+    geom_col(aes(country, tests_cumulative))
 
-geom_point
-=======================================================================
-
-Row
------------------------------------------------------------------------
-
-### Scatter Chart with geom_point
+```
+   
+Column {data-width=400}
+-------------------------------------
+   
+### PCR tests
 
 ```{r}
-p <- ggplot(dat, aes(x=xvar, y=yvar)) +
-            geom_point(shape=1)      # Use hollow circles
-ggplotly(p)
-```
-
-
-### geom_smooth Linear Regression
-
+ggplot(tests_data_today) + 
+    geom_col(aes(country, pcr_tests_cum))
+```   
+ 
+### Rapid tests
+    
 ```{r}
-p <- ggplot(dat, aes(x=xvar, y=yvar)) +
-            geom_point(shape=1) +    # Use hollow circles
-            geom_smooth(method=lm)   # Add linear regression line
-ggplotly(p)
+ggplot(tests_data_today) + 
+    geom_col(aes(country, rapid_test_cum))
 ```
-
-Row
------------------------------------------------------------------------
-
-### geom_smooth with Loess Smoothed Fit
-
-```{r}
-p <- ggplot(dat, aes(x=xvar, y=yvar)) +
-            geom_point(shape=1) +    # Use hollow circles
-            geom_smooth()            # Add a loess smoothed fit curve with confidence region
-ggplotly(p)
-```
-
