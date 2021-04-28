@@ -42,7 +42,7 @@ jobs:
 
       - name: Rendering dashboard
         run: |
-          Rscript -e 'rmarkdown::render("docs/index.Rmd")'
+          Rscript -e 'rmarkdown::render("index.Rmd")'
 
       - name: Commit files
         run: |
