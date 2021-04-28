@@ -10,8 +10,49 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+
+
+  update-data-tests:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Install R
+      - name: Install-R
+        uses: r-lib/actions/setup-r@v1
+        with:
+         r-version: '4.0.4' # The R version to load (if necessary) and use.
+      
+      
+      - run: |
+          Rscript -e "install.packages('dplyr', repos = 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest')"
+          Rscript -e "install.packages('readr', repos = 'https://packagemanager.rstudio.com/cran/__linux__/focal/latest')"
+         
+      # Run Script
+      - run: Rscript load_test.R
+      
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git pull origin main
+          git add data/tests_today.csv
+          git commit -m "update tests_today.csv" || echo "Nothing to update"
+          
+          
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
   # This workflow contains a single job called "write-csv"
   render-dashboard:
+    needs: update-data-tests
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
